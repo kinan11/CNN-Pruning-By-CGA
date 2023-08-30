@@ -1,17 +1,18 @@
-import numpy as np
 from sklearn.datasets import load_iris
-from kernel_density_estimator import kernel_density_estimator
+from sklearn.preprocessing import StandardScaler
+from CGA import complete_gradient_algorithm
 
 
-# Załaduj zbiór danych Iris
-iris = load_iris()
-data = iris.data
+def main():
+    iris = load_iris()
+    data = iris.data
 
-# Punkty do oszacowania gęstości
-query_points = np.random.randn(data.shape[0], data.shape[1])  # Losowe punkty do oszacowania
+    scaler = StandardScaler()
+    data = scaler.fit_transform(data)
+    h = 0.3
 
-kde_values = kernel_density_estimator(data, query_points)
+    print(complete_gradient_algorithm(data, h))
 
-# Wyświetlenie oszacowań gęstości dla każdej cechy w każdej próbce
-for i in range(len(kde_values)):
-    print(f"Data Point {i + 1}: Estimated Densities = {kde_values[i]}")
+
+if __name__ == "__main__":
+    main()

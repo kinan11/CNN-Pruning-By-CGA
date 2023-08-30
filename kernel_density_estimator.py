@@ -12,10 +12,11 @@ def standard_kernel_density_estimator(data, query_points, h):
 
     for i in range(m):
         for j in range(d):
-            diff = data[:, j] - query_points[i, j]
-            scaled_diff = diff / h
-            kernel_vals = gaussian_kernel(scaled_diff)
-            kde_values[i, j] = np.sum(kernel_vals) / (m * h)
+            for k in range(m):
+                diff = data[i, j] - query_points[k, j]
+                scaled_diff = diff / h
+                kernel_vals = gaussian_kernel(scaled_diff)
+                kde_values[i, j] += kernel_vals / (m * h)
 
     return kde_values
 
@@ -27,10 +28,11 @@ def modified_kernel_density_estimator(data, query_points, h, s):
 
     for i in range(m):
         for j in range(d):
-            diff = data[:, j] - query_points[i, j]
-            scaled_diff = diff / (h * s[:, j])
-            kernel_vals = gaussian_kernel(scaled_diff)
-            kde_values[i, j] = np.sum(kernel_vals) / (m * h * s[i, j])
+            for k in range(m):
+                diff = data[i, j] - query_points[k, j]
+                scaled_diff = diff / (h * s[k, j])
+                kernel_vals = gaussian_kernel(scaled_diff)
+                kde_values[i, j] += kernel_vals / (m * h * s[i, j])
 
     return kde_values
 
