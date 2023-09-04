@@ -12,7 +12,7 @@ def calculate_d(x):
 
 
 def complete_gradient_algorithm(data, h):
-    num_iterations = 10
+    num_iterations = 10000
     x = data.copy()
     f_value_prev = []
     b = (h ** 2) / (data.shape[0] + 2)
