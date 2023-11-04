@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 
 
@@ -41,6 +43,34 @@ def modified_kernel_density_estimator(data, h, s):
     return kde_values
 
 
+def gradient_kernel_density_estimator(data, h, s):
+    m, d = data.shape
+
+    kde_values = np.zeros(m)
+
+    for i in range(m):
+        for j in range(m):
+            kernel_vals = 1
+            gradient_vals = 0
+            for k in range(d):
+                diff = data[i, k] - data[j, k]
+                scaled_diff = diff / (h[k] * s[j])
+                kernel_vals *= gaussian_kernel(scaled_diff)
+            for g in range(d):
+                diff = data[i, g] - data[j, g]
+                scaled_diff = (-1) * diff / ((h[g] ** 2) * (s[j] ** 2))
+                gradient_vals += (scaled_diff * kernel_vals) ** 2
+            kde_values[i] += math.sqrt(gradient_vals) / s[j]
+        kde_values[i] = kde_values[i] / (m * np.prod(h))
+
+    return kde_values
+
+
+def gradient(data, h, s):
+    grad = gradient_kernel_density_estimator(data, h, s)
+    return grad
+
+
 def kernel_density_estimator(data, h):
     c = 0.5
 
@@ -51,4 +81,4 @@ def kernel_density_estimator(data, h):
 
     modified_kde_values = modified_kernel_density_estimator(data, h, s)
 
-    return modified_kde_values
+    return modified_kde_values, s

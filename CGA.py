@@ -1,6 +1,9 @@
+import math
+
 import numpy as np
 
-from kernel_density_estimator import kernel_density_estimator
+from calaculate_h import calculate_list_of_h
+from kernel_density_estimator import kernel_density_estimator, gradient
 
 
 def calculate_d(x):
@@ -11,31 +14,29 @@ def calculate_d(x):
     return dist
 
 
-def complete_gradient_algorithm(data, h):
-    num_iterations = 10000
+def complete_gradient_algorithm(data):
+    num_iterations = 1000
     x = data.copy()
-    f_value_prev = []
+    h = calculate_list_of_h(x)
     b = (np.power(h, 2)) / (data.shape[0] + 2)
     d0 = calculate_d(data)
-    alpha = 0.00001
+    alpha = 0.001
 
     for iteration in range(num_iterations):
         dk_prev = calculate_d(x)
-        f_value_curr = kernel_density_estimator(x, h)
+        h = calculate_list_of_h(x)
+        # b = (np.power(h, 2)) / (x.shape[0] + 2)
+        f_value_curr, s = kernel_density_estimator(x, h)
 
         if iteration > 0:
+            grad = gradient(x, h, s)
             for i in range(data.shape[0]):
-                f_gradient = f_value_curr[i] - f_value_prev[i]
-                x[i] += b * (f_gradient / f_value_curr[i])
+                x[i] += b * (grad[i] / f_value_curr[i])
 
             dk = calculate_d(x)
+            a = abs(dk - dk_prev)
             if abs(dk - dk_prev) <= alpha * d0:
                 break
-        else:
-            for i in range(data.shape[0]):
-                f_gradient = f_value_curr[i]
-                x[i] += b * (f_gradient / f_value_curr[i])
 
-        f_value_prev = f_value_curr.copy()
-
+    print(iteration)
     return x
