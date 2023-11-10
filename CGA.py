@@ -18,14 +18,12 @@ def complete_gradient_algorithm(data):
     num_iterations = 1000
     x = data.copy()
     h = calculate_list_of_h(x)
-    b = (np.power(h, 2)) / (data.shape[0] + 2)
+    b = (np.power(np.mean(h), 2)) / (data.shape[0] + 2)
     d0 = calculate_d(data)
     alpha = 0.001
 
     for iteration in range(num_iterations):
         dk_prev = calculate_d(x)
-        h = calculate_list_of_h(x)
-        # b = (np.power(h, 2)) / (x.shape[0] + 2)
         f_value_curr, s = kernel_density_estimator(x, h)
 
         if iteration > 0:
