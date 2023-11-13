@@ -20,7 +20,7 @@ def complete_gradient_algorithm(data):
     h = calculate_list_of_h(x)
     b = (np.power(np.mean(h), 2)) / (data.shape[0] + 2)
     d0 = calculate_d(data)
-    alpha = 0.001
+    alpha = 0.0003
 
     for iteration in range(num_iterations):
         dk_prev = calculate_d(x)
@@ -37,4 +37,4 @@ def complete_gradient_algorithm(data):
                 break
 
     print(iteration)
-    return x
+    return x, h

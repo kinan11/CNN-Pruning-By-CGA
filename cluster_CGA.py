@@ -15,7 +15,7 @@ def calculate_distances(data):
     return distances
 
 
-def calculate_x_d(data):
+def calculate_x_d(data, h):
     distances = calculate_distances(data)
     max_d = max(distances)
     sigma = statistics.stdev(distances)  # odchylenie standardowe
@@ -25,7 +25,7 @@ def calculate_x_d(data):
     kde_d, s = kernel_density_estimator(converted_d, h)
     x_d = kde_d[1]
 
-    for i in range(1, math.floor(d)):
+    for i in range(1, math.floor(d) - 1):
         x_d = kde_d[i]
         if kde_d[i - 1] > kde_d[i] <= kde_d[i + 1]:
             break
@@ -39,8 +39,8 @@ def calculate_distance(data):
     return distances
 
 
-def cluster_algorithm(data):
-    x_d = calculate_x_d(data)
+def cluster_algorithm(data, h):
+    x_d = calculate_x_d(data, h)
     clusters = []
     while data.shape[0] > 0:
         distances = calculate_distance(data)
